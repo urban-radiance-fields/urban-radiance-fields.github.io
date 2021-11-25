@@ -1,0 +1,72 @@
+body {
+  font-family: '', Verdana, Helvetica, sans-serif;
+  font-weight: 300;
+  color: rgb(0, 0, 0);
+  font-size: 16px;
+}
+h1 {
+  font-size: 40px;
+  color: #555;
+  font-weight: 400;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 900;
+  border-bottom: 1px solid #999;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+h3 {
+  text-align: center;
+}
+
+.teaser img {
+  height: 256px;
+  margin: auto;
+  display: block;
+}
+
+.authors {
+  color: #222;
+  font-size: 20px;
+  font-weight: 300;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  margin-bottom: 0px;
+}
+
+.container {
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 1024px; /* or 950px */
+}
+
+.icons { text-align: center; margin:20px;}
+
+#canvas {
+  /* background-color: #000; */
+  width: 640px;
+  height: 360px;
+  border: 1px solid black;
+  /* margin: 10px; */
+  padding: 0px;
+  margin: auto;
+  /* position: static;  */
+  /* top: 10px; */
+  /* left: 10px; */
+  display: block;
+}
+
+path {
+  stroke: gray;
+  /* stroke-width: 0.01px; */
+  fill: grey;
+}
