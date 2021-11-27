@@ -10,7 +10,7 @@ if ( WEBGL.isWebGL2Available() === false ) {
 }
 
 
-let container;
+let container, progress_container;
 
 let camera, scene, renderer, w, h;
 
@@ -20,16 +20,22 @@ animate();
 
 function init() {
 
-  renderer = new THREE.WebGLRenderer();
+  const loadingManager = new THREE.LoadingManager( () => {
+		// const loadingScreen = document.getElementById( 'loading-screen' );
+		// loadingScreen.classList.add( 'fade-out' );
+		// loadingScreen.addEventListener( 'transitionend', onTransitionEnd );
+	} );
 
   container = document.getElementById( 'canvas' );
+  renderer = new THREE.WebGLRenderer();
+
+
   w = container.offsetWidth;
   h = container.offsetHeight;
 
   renderer.setPixelRatio( window.devicePixelRatio );
   renderer.setSize( w, h );
   container.appendChild(renderer.domElement);
-
 
 
   camera = new THREE.PerspectiveCamera( 45, w / h, 0.001, 2000 );
@@ -40,6 +46,7 @@ function init() {
   // scene
 
   scene = new THREE.Scene();
+  scene.background =  new THREE.Color( 0xffffff );
 
   const ambientLight = new THREE.AmbientLight( 0xcccccc, 0.4 );
   scene.add( ambientLight );
@@ -53,16 +60,6 @@ function init() {
       specular: 0x111111, shininess: 2, vertexColors: THREE.VertexColors,
     side: THREE.DoubleSide} );
 
-  const loadingManager = new THREE.LoadingManager( () => {
-
-    // const loadingScreen = document.getElementById( 'loading-screen' );
-    // loadingScreen.classList.add( 'fade-out' );
-
-    // optional: remove loader from DOM via event listener
-    // loadingScreen.addEventListener( 'transitionend', onTransitionEnd );
-
-  });
-
   const loader = new PLYLoader(loadingManager);
   loader.load(
       './data/meshes/sao_paulo/mesh.ply',
@@ -71,13 +68,14 @@ function init() {
           const mesh = new THREE.Mesh(geometry, material)
           mesh.rotateX(-Math.PI / 2)
           scene.add(mesh)
-      },
-      (xhr) => {
-          console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
-      },
-      (error) => {
-          console.log(error)
       }
+      // (xhr) => {
+          // console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
+          // progressBar.style.width = (xhr.loaded / xhr.total * 100) + '%';
+      // },
+      // (error) => {
+      //     console.log(error)
+      // }
   )
 
   // loader.load( '../data/meshes/sao_paulo/mesh.ply', function ( obj ) {

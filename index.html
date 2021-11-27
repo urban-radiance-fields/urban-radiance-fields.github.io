@@ -3,22 +3,29 @@
 <html>
 <head>
   <title>URF</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <script src="./build/three.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+  <!-- <script src="./build/three.min.js"></script> -->
   <script type="module"  src="./mesh_renderer.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
-  <script src="https://d3js.org/topojson.v0.min.js"></script>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://unpkg.com/topojson@3"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r74/three.min.js"></script>
+
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+  <script src="https://d3js.org/topojson.v0.min.js"></script> -->
+
 </head>
 <body>
 
-
   <div class="container">
-    <h1>Urban Radiance Fields</h1>
-    <!-- <h3></h3>
-    <br><br> -->
-    <div class="col-md-12 text-center">
+    <div class="row justify-content-center">
+      <h1>Urban Radiance Fields</h1>
+    </div>
+
+    <div class="row justify-content-center text-center">
       <ul class="list-inline">
         <li>
           <a href="http://www.krematas.com/">
@@ -62,35 +69,38 @@
 
     <div class="row justify-content-md-center icons">
       <div class="col">
-        <img src="images/logo_google.png"style="height:28px">
+        <img src="images/logo_google.png"style="height:36px">
       </div>
     </div>
 
-
-    <div class="row justify-content-md-center icons">
-      <div class="col">
-        <a href="images/go_urf.pdf" target="_blank"><i class="fa fa-file-text fa-2x"></i></a>
-      </div>
-    </div>
-    <div class="row justify-content-md-center icons">
-      <div class="col">
+    <div class="row justify-content-md-center text-center">
+      <div class="col-sm-2">
+        <a href="images/go_urf.pdf" target="_blank"><i class="fa fa-file-pdf-o fa-2x"></i></a>
+        <br>
         Paper
       </div>
-    </div>
-
-
-    <div class="row justify-content-md-center">
-      <div class="col teaser">
-        <img src="./images/teaser.png">
+      <div class="col-sm-2">
+        <a href="images/go_urf.pdf" target="_blank"><i class="fa fa-link fa-2x"></i></a>
+        <br>
+        Arxiv
+      </div>
+      <div class="col-sm-2">
+        <a href="https://www.youtube.com/watch?v=qGlq5DZT6uc" target="_blank"><i class="fa fa-youtube-play fa-2x"></i></a>
+        <br>
+        Video
       </div>
     </div>
-    <div class="row justify-content-md-center icons">
-      <img src="data/gifs/intro.gif">
+
+    <!-- <div class="row justify-content-md-center">
+      <div class="col teaser">
+        <img src="./images/teaser.png" style="max-width: 100%;">
+      </div>
+    </div> -->
+
+    <div class="row justify-content-md-center">
+      <img src="data/gifs/intro.gif" class="adjustable", id="teaser">
     </div>
 
-
-  </div>
-  <div class="container">
     <h2>Abstract</h2>
     <p>
       The goal of this work is to perform 3D reconstruction and novel view synthesis
@@ -111,53 +121,44 @@
       comparison to both traditional methods (e.g.~COLMAP) and recent neural
       representations (e.g.~Mip-NeRF).
     </p>
-  </div>
 
-  <div class="container">
     <h2>Video</h2>
-    <div class="row justify-content-md-center icons">
-      <video width="640" height="360" controls>
-        <source src="images/video.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-      </video>
+    <div class="row justify-content-center">
+      <iframe width="640" height="360" frameborder="0"
+      src="https://www.youtube.com/embed/qGlq5DZT6uc">
+      </iframe>
     </div>
-  </div>
 
-  <div class="container">
     <h2>Novel View Synthesis</h2>
-    <p>Click on a city to visualize the sequence (wait a bit to load).</p>
+    <p>Click on a city to visualize a novel camera trajectory (wait a bit to load). </p>
     <div class="row justify-content-md-center icons" id="map">
       <script type="text/javascript">
-        var width = 960,
-            height = 500;
+        var container = document.getElementById( "teaser" );
+        var width = container.offsetWidth;
+        var height = width / (16/9);
 
-        var projection = d3.geo.mercator()
-            .center([0, 0 ])
-            .scale(150)
+        var projection = d3.geoMercator()
+            .center([80, 0 ])
+            .scale(100)
             .rotate([0,0]);
 
         var svg = d3.select("#map").append("svg")
             .attr("width", width)
             .attr("height", height);
 
-        var path = d3.geo.path()
+        var path = d3.geoPath()
             .projection(projection);
 
         var g = svg.append("g");
 
         // load and display the World
 
-        d3.json("data/world-110m2.json", function(error, topology) {
-
+        d3.json("data/world-110m2.json").then(function(topology) {
           // load and display the cities
-          d3.csv("data/cities.csv", function(error, data) {
+          d3.csv("data/cities.csv").then(function(data) {
               g.selectAll("circle")
                 .data(data)
                 .enter()
-                // .append("a")
-                //     .attr("xlink:href", function(d) {
-                //       return "https://www.google.com/search?q="+d.city;}
-                //     )
                 .append("circle")
                 .attr("cx", function(d) {
                         return projection([d.lon, d.lat])[0];
@@ -165,53 +166,79 @@
                 .attr("cy", function(d) {
                         return projection([d.lon, d.lat])[1];
                 })
-                .attr("r", 5)
+                .attr("r", 7)
                 .style("fill", "red")
                 .on('click', function(d, i) {
-                  console.log(d);
+                    // console.log(d);
                     d3.select(this)
                       .transition()
-                      .attr('r', 20)
+                      .attr('r', 15)
                       .transition()
-                      .attr('r', 5);
+                      .attr('r', 7);
                     d3.select('#gifs').attr("src", function(dd) {
                       return "data/gifs/"+d.city+".gif";}
                     )
-                  })
+                  });
           });
           g.selectAll("path")
-          .data(topojson.object(topology, topology.objects.countries).geometries)
-          .enter()
-          .append("path")
-          .attr("d", path)
+        .data(topojson.feature(topology, topology.objects.countries)
+            .features)
+        .enter().append("path")
+        .attr("d", path);
+
+          // g.selectAll("path")
+          // .data(topojson.object(topology, topology.objects.countries).geometries)
+          // .enter()
+          // .append("path")
+          // .attr("d", path)
         });
 
         svg.selectAll('circle')
         .on('click', function(d, i) {
-            console.log("clicking on", this);
             // transition the clicked element
             // to have a radius of 20
             d3.select(this)
               .transition()
-              .attr('r', 20);
-          })
+              .attr('r', 15);
+          });
 
+          var zoom = d3.zoom()
+              .scaleExtent([1, 8])
+              .on('zoom', function(event) {
+                  g.selectAll('path')
+                  .attr('transform', d3.event.transform);
+                  g.selectAll("circle")
+                  .attr('transform', d3.event.transform);
+        });
+
+        svg.call(zoom);
       </script>
-
-
     </div>
-    <div class="row justify-content-md-center icons">
-      <img src="data/gifs/sydney.gif" id='gifs'>
+    <div class="row justify-content-md-center gif_vis">
+      <img src="data/gifs/sydney.gif" id='gifs' class="adjustable">
     </div>
-  </div>
 
-  <div class="container">
-    <h2>Mesh</h2>
+    <h2>Mesh Reconstruction</h2>
+    <p>We use our method to extract colored meshes and visualize them on the browser (it may take some time to load).</p>
     <div class="row justify-content-md-center icons">
       <div id="canvas"></div>
     </div>
-  </div>
 
+    <h2>Citation</h2>
+    <div class="row justify-content-center">
+      <div class="col form-group">
+        <textarea id="bibtex" class="form-control" rows="7" readonly>
+@article{rematas2021urf,
+    title={Urban Radiance Fields},
+    author={Konstantinos Rematas, Andrew Liu, Pratul P. Srinivasan,
+            Jonathan T. Barron, Andrea Tagliasacchi, Tom Funkhouser and Vittorio Ferrari},
+    journal={arXiv},
+    year={2021}
+}
+      </textarea>
+      </div>
+    </div>
 
+    <div class="end"></div>
 </body>
 </html>
