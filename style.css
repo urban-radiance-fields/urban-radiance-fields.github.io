@@ -73,6 +73,13 @@ p {
   margin-bottom:50px;
 }
 
+.myteaser {
+  margin-top:50px;
+  margin-bottom:50px;
+  max-width: 100%;
+}
+
+
 #canvas {
   /* background-color: #000; */
   /* width: 640px; */
@@ -109,6 +116,7 @@ path {
   width: 100%;
   max-height: 360px;
   max-width: 640px;
+  margin-bottom:50px;
 }
 
 .end{
