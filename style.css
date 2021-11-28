@@ -79,6 +79,9 @@ p {
   max-width: 100%;
 }
 
+.footnote{
+  font-size: 2px;
+}
 
 #canvas {
   /* background-color: #000; */
